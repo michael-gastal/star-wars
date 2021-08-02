@@ -1,26 +1,36 @@
-<%= form_tag root_path, method: :get, class: "input-group mb-3 searchbar" do %>
-  <%= text_field_tag 'films', "",
-    placeholder: "Film" %>
+<%= form_tag root_path, method: :get do %>
 
-  <%= text_field_tag 'people', "",
-    placeholder: "Personnage" %>
+  <div class="input-group mx-auto searchbar justify-content-center">
+    <%= text_field_tag 'films', "",
+      placeholder: "Film" %>
 
-  <%= text_field_tag 'planets', "",
-    placeholder: "Planète" %>
+    <%= text_field_tag 'people', "",
+      placeholder: "Personnage" %>
 
-  <%= text_field_tag 'species', "",
-    placeholder: "Espèce" %>
+    <%= text_field_tag 'planets', "",
+      placeholder: "Planète" %>
 
-  <%= text_field_tag 'starships', "",
-      placeholder: "Vaisseau" %>
+    <%= text_field_tag 'species', "",
+      placeholder: "Espèce" %>
 
-  <%= text_field_tag 'vehicles', "",
-      placeholder: "Véhicule" %>
+    <%= text_field_tag 'starships', "",
+        placeholder: "Vaisseau" %>
 
-  <%= submit_tag "Nouvelle Recherche" %>
+    <%= text_field_tag 'vehicles', "",
+        placeholder: "Véhicule" %>
+
+  </div>
+
+  <div class="text-center">
+    <%= submit_tag "Nouvelle Recherche", class: "btn btn-primary mt-3" %>
+  </div>
 <% end %>
 
-<% unless @result.nil? %>
+<% if @result.nil? %>
+  <p>Vous n'avez pas fait de nouvelle recherche...</p>
+<% elsif @result['count'] == 0 %>
+  <p>Aucun résultat ne correspond à votre recherche 😕</p>
+<% else %>
   <% @result['results'].each do |r| %>
     <p><%= r['name'] %></p>
   <% end %>
