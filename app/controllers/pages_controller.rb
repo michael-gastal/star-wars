@@ -4,24 +4,43 @@ require 'json'
 class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :home ]
 
+  CATEGORIES = ["Films", "Personnages", "Planètes", "Espèces", "Vaisseaux", "Véhicules"]
+
   def home
     base_url = "https://swapi.dev/api/"
 
-    @research = params[:films] if params[:films].present?
-    @research = params[:people] if params[:people].present?
-    @research = params[:planets] if params[:planets].present?
-    @research = params[:species] if params[:species].present?
-    @research = params[:starships] if params[:starships].present?
-    @research = params[:vehicles] if params[:vehicles].present?
+    @category = find_category
 
-    @url = "#{base_url}/films/?search=#{@research}" if params[:films].present?
-    @url = "#{base_url}/people/?search=#{@research}" if params[:people].present?
-    @url = "#{base_url}/planets/?search=#{@research}" if params[:planets].present?
-    @url = "#{base_url}/species/?search=#{@research}" if params[:species].present?
-    @url = "#{base_url}/starships/?search=#{@research}" if params[:starships].present?
-    @url = "#{base_url}/vehicles/?search=#{@research}" if params[:vehicles].present?
+    research = params["name"] if params[:name].present?
+
+    @url = "#{base_url}/#{@category}" if params[:category].present?
+    @url = "#{base_url}/#{@category}/?search=#{research}" if params[:category].present? && params[:name].present?
 
     @result = JSON.parse(open(@url).read) unless @url.nil?
 
+    if @category != "films" && params[:category].present?
+      @pages = []
+      until @result["next"].nil?
+        @pages << @result
+        @url = @result["next"]
+        @result = JSON.parse(open(@url).read)
+      end
+      @pages << @result
+    else
+      @pages = [@result]
+    end
+  end
+
+  private
+
+  def find_category
+    category = "films" if params[:category] == "Films"
+    category = "people" if params[:category] == "Personnages"
+    category = "planets" if params[:category] == "Planètes"
+    category = "species" if params[:category] == "Espèces"
+    category = "starships" if params[:category] == "Vaisseaux"
+    category = "vehicles" if params[:category] == "Véhicules"
+
+    return category
   end
 end
