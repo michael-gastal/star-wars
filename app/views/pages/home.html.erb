@@ -1,2 +1,27 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<%= form_tag root_path, method: :get, class: "input-group mb-3 searchbar" do %>
+  <%= text_field_tag 'films', "",
+    placeholder: "Film" %>
+
+  <%= text_field_tag 'people', "",
+    placeholder: "Personnage" %>
+
+  <%= text_field_tag 'planets', "",
+    placeholder: "Planète" %>
+
+  <%= text_field_tag 'species', "",
+    placeholder: "Espèce" %>
+
+  <%= text_field_tag 'starships', "",
+      placeholder: "Vaisseau" %>
+
+  <%= text_field_tag 'vehicles', "",
+      placeholder: "Véhicule" %>
+
+  <%= submit_tag "Nouvelle Recherche" %>
+<% end %>
+
+<% unless @result.nil? %>
+  <% @result['results'].each do |r| %>
+    <p><%= r['name'] %></p>
+  <% end %>
+<% end %>
