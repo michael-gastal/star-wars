@@ -7,6 +7,8 @@ class PagesController < ApplicationController
   CATEGORIES = ["Films", "Personnages", "Planètes", "Espèces", "Vaisseaux", "Véhicules"]
 
   def home
+    @user = current_user
+
     base_url = "https://swapi.dev/api"
 
     @category = find_category
