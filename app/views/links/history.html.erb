@@ -1,5 +1,9 @@
-<h2>Historique des ressources visualisées</h2>
+<div class="container">
+  <h2>Historique des ressources visualisées</h2>
 
-<% @links.each do |link| %>
-  <p><%= link.url %></p>
-<% end %>
+  <ul>
+    <% @links.each do |link| %>
+      <li class="history-list"><%= link_to "#{link.url}", "#{link.url}" %></li>
+    <% end %>
+  </ul>
+</div>
