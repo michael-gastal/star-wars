@@ -20,23 +20,9 @@ class PagesController < ApplicationController
 
     @result = JSON.parse(open(@url).read) unless @url.nil?
 
-    if @category != "films" && params[:category].present?
-      @pages = []
-      until @result["next"].nil?
-        @pages << @result
-        @new_url = @result["next"]
-        @result = JSON.parse(open(@new_url).read)
-      end
-      @pages << @result
-    else
-      @pages = [@result]
-    end
+    @pages = multi_pages(@category, @result)
 
-    unless @url.nil?
-      link = Link.new(url: @url)
-      link.user = current_user
-      link.save
-    end
+    link_save(@url) unless @url.nil?
   end
 
   private
@@ -50,5 +36,27 @@ class PagesController < ApplicationController
     category = "vehicles" if params[:category] == "Véhicules"
 
     return category
+  end
+
+  def multi_pages(category, result)
+    if category != "films" && params[:category].present?
+      pages = []
+      until result["next"].nil?
+        pages << result
+        new_url = result["next"]
+        result = JSON.parse(open(new_url).read)
+      end
+      pages << result
+    else
+      pages = [result]
+    end
+
+    return pages
+  end
+
+  def link_save(url)
+      link = Link.new(url: url)
+      link.user = current_user
+      link.save
   end
 end
