@@ -24,6 +24,11 @@ RSpec.describe Link, type: :model do
     expect(link.url).to eq("https://swapi.dev/api/people/?search=skywalker")
   end
 
+  it "url starts with https://swapi.dev/api/" do
+    link1 = Link.new(url: "https://swapi.dev/api/people/?search=skywalker")
+    expect(link1.url).to match(/https:\/\/swapi.dev\/api\/.*/)
+  end
+
   it "belongs to a user" do
     link = Link.new(user: user1)
     expect(link.user).to eq(user1)

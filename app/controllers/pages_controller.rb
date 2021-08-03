@@ -7,7 +7,7 @@ class PagesController < ApplicationController
   CATEGORIES = ["Films", "Personnages", "Planètes", "Espèces", "Vaisseaux", "Véhicules"]
 
   def home
-    base_url = "https://swapi.dev/api/"
+    base_url = "https://swapi.dev/api"
 
     @category = find_category
 
@@ -22,12 +22,18 @@ class PagesController < ApplicationController
       @pages = []
       until @result["next"].nil?
         @pages << @result
-        @url = @result["next"]
-        @result = JSON.parse(open(@url).read)
+        @new_url = @result["next"]
+        @result = JSON.parse(open(@new_url).read)
       end
       @pages << @result
     else
       @pages = [@result]
+    end
+
+    unless @url.nil?
+      link = Link.new(url: @url)
+      link.user = current_user
+      link.save
     end
   end
 
