@@ -1,37 +1,93 @@
 <%= form_tag root_path, method: :get do %>
 
-  <div class="input-group mx-auto searchbar justify-content-center">
-    <%= text_field_tag 'films', "",
-      placeholder: "Film" %>
+  <div class="input-group mx-auto searchbar justify-content-center mt-3">
+    <%= select_tag 'category',
+      options_for_select(PagesController::CATEGORIES, params[:category]),
+      :prompt => "Catégorie" %>
 
-    <%= text_field_tag 'people', "",
-      placeholder: "Personnage" %>
-
-    <%= text_field_tag 'planets', "",
-      placeholder: "Planète" %>
-
-    <%= text_field_tag 'species', "",
-      placeholder: "Espèce" %>
-
-    <%= text_field_tag 'starships', "",
-        placeholder: "Vaisseau" %>
-
-    <%= text_field_tag 'vehicles', "",
-        placeholder: "Véhicule" %>
-
+    <%= text_field_tag 'name', "",
+      placeholder: "Nom" %>
   </div>
 
   <div class="text-center">
-    <%= submit_tag "Nouvelle Recherche", class: "btn btn-primary mt-3" %>
+    <%= submit_tag "Nouvelle Recherche", class: "btn btn-primary my-3" %>
   </div>
 <% end %>
 
-<% if @result.nil? %>
+<div class="search-result">
+
+  <% if @result.nil? %>
   <p>Vous n'avez pas fait de nouvelle recherche...</p>
-<% elsif @result['count'] == 0 %>
-  <p>Aucun résultat ne correspond à votre recherche 😕</p>
-<% else %>
-  <% @result['results'].each do |r| %>
-    <p><%= r['name'] %></p>
+  <% elsif @result['count'] == 0 %>
+    <p>Aucun résultat ne correspond à votre recherche 😕</p>
+  <% else %>
+    <% @pages.each do |page| %>
+        <% page['results'].each do |result| %>
+          <% case @category %>
+            <% when "films" %>
+              <h2><%= result['title'] %></h2>
+              <p>Réalisé par : <%= result['director'] %></p>
+              <p>Produit par : <%= result['producer'] %></p>
+              <p>Date de sortie : <%= result['release_date'] %></p>
+              <p>Résumé (en anglais) : <%= result['opening_crawl'] %></p>
+            <% when "people" %>
+              <h2><%= result['name'] %></h2>
+              <p>Taille : <%= result['height'] %>cm</p>
+              <p>Poids : <%= result['mass'] %>kg</p>
+              <p>Cheveux : <%= result['hair_color'] %></p>
+              <p>Peau : <%= result['skin_color'] %></p>
+              <p>Yeux : <%= result['eye_color'] %></p>
+              <p>Année de naissance : <%= result['birth_year'] %></p>
+              <p>Genre : <%= result['gender'] %></p>
+            <% when "planets" %>
+              <h2><%= result['name'] %></h2>
+              <p>Période de rotation : <%= result["rotation_period"] %></p>
+              <p>Période orbitale : <%= result["orbital_period"] %></p>
+              <p>Diamètre : <%= result["diameter"] %></p>
+              <p>Climat : <%= result["climate"] %></p>
+              <p>Gravité : <%= result["gravity"] %></p>
+              <p>Terrain : <%= result["terrain"] %></p>
+              <p>Surface d'eau : <%= result["surface_water"] %></p>
+              <p>Population : <%= result["population"] %></p>
+            <% when "species" %>
+              <h2><%= result["name"] %></h2>
+              <p>Classification : <%= result["classification"] %></p>
+              <p>Désignation : <%= result["designation"] %></p>
+              <p>Taille moyenne : <%= result["average_height"] %></p>
+              <p>Peau : <%= result["skin_colors"] %></p>
+              <p>Cheveux : <%= result["hair_colors"] %></p>
+              <p>Yeux : <%= result["eye_colors"] %></p>
+              <p>Espérance de vie : <%= result["average_lifespan"] %></p>
+              <p>Langue : <%= result["language"] %></p>
+            <% when "starships" %>
+              <h2><%= result["name"] %></h2>
+              <p>Modèle : <%= result["model"] %></p>
+              <p>Constructeur : <%= result["manufacturer"] %></p>
+              <p>Coût : <%= result["cost_in_credits"] %></p>
+              <p>Longueur : <%= result["length"] %></p>
+              <p>Vitesse atmosphérique max : <%= result["max_atmosphering_speed"] %></p>
+              <p>Membres d'équipage : <%= result["crew"] %></p>
+              <p>Passagers : <%= result["passengers"] %></p>
+              <p>Capacité de cargaison : <%= result["cargo_capacity"] %></p>
+              <p>Consommables: <%= result["consumables"] %></p>
+              <p>Note hyperdrive : <%= result["hyperdrive_rating"] %></p>
+              <p>MGLT : <%= result["MGLT"] %></p>
+              <p>Classe de vaisseau : <%= result["starship_class"] %></p>
+            <% when "vehicles" %>
+              <h2><%= result["name"] %></h2>
+              <p>Modèle : <%= result["model"] %></p>
+              <p>Constructeur : <%= result["manufacturer"] %></p>
+              <p>Coût : <%= result["cost_in_credits"] %></p>
+              <p>Longueur : <%= result["length"] %></p>
+              <p>Vitesse atmosphérique max : <%= result["max_atmosphering_speed"] %></p>
+              <p>Membres d'équipage : <%= result["crew"] %></p>
+              <p>Passagers : <%= result["passengers"] %></p>
+              <p>Capacité de cargaison : <%= result["cargo_capacity"] %></p>
+              <p>Consommables: <%= result["consumables"] %></p>
+              <p>Classe de véhicule : <%= result["vehicle_class"] %></p>
+          <% end %>
+        <% end %>
+    <% end %>
   <% end %>
-<% end %>
+
+</div>
